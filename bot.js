@@ -6,8 +6,10 @@ require("dotenv").config();
 
 const Token = "";
 
+const generateImage = require("./generateImage");
+
 const client = new Discord.Client({
-  intents: ["GUILDS", "GUILD_MESSAGES"],
+  intents: ["GUILDS", "GUILD_MESSAGES", "GUILD_MEMBERS"],
 });
 
 /*
@@ -26,4 +28,14 @@ client.on("messageCreate", (msg) => {
   if (msg.content === "Hello Michael") {
     msg.reply("That's what she said!!");
   }
+});
+
+const welcomeChannelId = "953576740926660648";
+
+client.on("guildMemberAdd", async (member) => {
+  const img = await generateImage(member);
+  member.guild.channels.cache.get(welcomeChannelId).send({
+    content: `<@${member.id}> Welcome to the server boiii`,
+    files: [img],
+  });
 });
